@@ -52,3 +52,35 @@ app.get("/api/get_product", (req, res)=>{
     }
 
 })
+
+
+// update api put
+app.put("/api/update/:id", (req, res) => {
+    let id = parseInt(req.params.id, 10);
+
+    let index = productData.findIndex(p => p.id === id);
+    if (index === -1) {
+        return res.status(404).json({ status: "error", message: "Product not found" });
+    }
+
+    // Ensure the ID is not lost
+    productData[index] = { ...productData[index], ...req.body, id };
+
+    res.status(200).json({ status: "success", message: "Product Updated" });
+});
+
+
+// delete api
+app.delete("/api/delete/:id", (req, res) => {
+    let id = parseInt(req.params.id, 10); // Ensure ID is a number
+
+    let index = productData.findIndex(p => p.id === id);
+    if (index === -1) {
+        return res.status(404).json({ status: "error", message: "Product not found" });
+    }
+
+    productData.splice(index, 1); // Remove product
+
+    return res.status(200).json({ status: "success", message: "Product deleted" });
+});
+

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:thirds/create_data.dart';
+import 'package:thirds/delete_screen.dart';
 import 'package:thirds/fetch_data.dart';
+import 'package:thirds/update_date.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,8 +32,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(builder: (context) => FetchData()));
                 },
                 child: Text('Read')),
-            ElevatedButton(onPressed: () {}, child: Text('Update')),
-            ElevatedButton(onPressed: () {}, child: Text('Delete'))
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => UpdateScreen()));
+                },
+                child: Text('Update')),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => DeleteScreen()));
+                },
+                child: Text('Delete'))
           ],
         ),
       ),

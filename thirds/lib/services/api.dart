@@ -45,10 +45,10 @@ class Api {
         if (data['products'] is List) {
           for (var value in data['products']) {
             products.add(Product(
-              name: value['pname'] ?? 'Unknown',
-              price: double.tryParse(value['pprice'].toString()) ?? 0.0,
-              desc: value['pdesc'] ?? 'No description',
-            ));
+                name: value['pname'] ?? 'Unknown',
+                price: double.tryParse(value['pprice'].toString()) ?? 0.0,
+                desc: value['pdesc'] ?? 'No description',
+                id: value['id'].toString()));
           }
         } else {
           debugPrint("Unexpected response format: ${res.body}");
@@ -61,5 +61,54 @@ class Api {
     }
 
     return products;
+  }
+
+  // update put method
+  static Future<void> updateProduct(
+      String? id, Map<String, dynamic> body) async {
+    if (id == null) {
+      debugPrint("Invalid product ID for update.");
+      return;
+    }
+
+    var url = Uri.parse("${baseUrl}update/$id");
+
+    try {
+      final res = await http.put(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(body),
+      );
+
+      debugPrint("Update Response: ${res.body}");
+
+      if (res.statusCode == 200) {
+        debugPrint("Product updated successfully");
+      } else {
+        debugPrint("Failed to update product: ${res.statusCode}");
+      }
+    } catch (e) {
+      debugPrint("Error: $e");
+    }
+  }
+
+// delete method
+  static Future<bool> deleteProduct(int id) async {
+    var url = Uri.parse("${baseUrl}delete/$id");
+
+    try {
+      final res = await http.delete(url);
+
+      if (res.statusCode == 200) {
+        debugPrint("Product deleted successfully: ${res.body}");
+        return true;
+      } else {
+        debugPrint("Failed to Delete: ${res.statusCode} - ${res.body}");
+        return false;
+      }
+    } catch (e) {
+      debugPrint("Error deleting product: $e");
+      return false;
+    }
   }
 }

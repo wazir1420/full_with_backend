@@ -45,6 +45,7 @@ class _CreateDataState extends State<CreateData> {
                       "pdesc": descController.text
                     };
                     Api.addProduct(data);
+                    Navigator.pop(context);
                   },
                   child: Text('Create Data'))
             ],
