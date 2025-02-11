@@ -22,37 +22,26 @@ class _DeleteScreenState extends State<DeleteScreen> {
     _futureProducts = Api.getProduct();
   }
 
-  Future<void> _deleteProduct(String? productId) async {
+  Future<void> _deleteProduct(String productId) async {
     debugPrint("🟡 Attempting to delete product with ID: $productId");
 
-    if (productId == null || productId.isEmpty) {
-      debugPrint("❌ Error: Product ID is null or empty");
+    if (productId.isEmpty) {
+      debugPrint("❌ Error: Product ID is empty");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('❌ Invalid product ID')),
       );
       return;
     }
 
-    int? id = int.tryParse(productId);
-    if (id == null) {
-      debugPrint("❌ Error: Could not convert ID '$productId' to int");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('❌ Invalid product ID format')),
-      );
-      return;
-    }
+    debugPrint("🟢 Sending DELETE request for Product ID: $productId");
 
-    debugPrint("🟢 Sending DELETE request for Product ID: $id");
-
-    bool success = await Api.deleteProduct(id);
+    bool success = await Api.deleteProduct(productId);
 
     if (success) {
       debugPrint("✅ Product deleted successfully!");
-
       setState(() {
         _loadProducts();
       });
-
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('✅ Product deleted successfully')),
@@ -86,11 +75,11 @@ class _DeleteScreenState extends State<DeleteScreen> {
               itemBuilder: (context, index) {
                 return ListTile(
                   leading: const Icon(Icons.storage),
-                  title: Text(products[index].name ?? 'No Name'),
-                  subtitle: Text(products[index].desc ?? 'No Description'),
+                  title: Text(products[index].name ?? "No Name"),
+                  subtitle: Text(products[index].desc ?? "No Description"),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => _deleteProduct(products[index].id),
+                    onPressed: () => _deleteProduct(products[index].id ?? ""),
                   ),
                 );
               },
